@@ -1,8 +1,8 @@
 # Cálculo de Matrizes
 
-Programa em Python para estudar e realizar operações básicas com matrizes.
+Programa em Python para realizar operações com matrizes e resolver sistemas lineares, com todos os dados digitados pelo teclado.
 
-## Operações previstas
+## Operações
 
 O programa possui um menu com as seguintes operações:
 
@@ -13,6 +13,7 @@ O programa possui um menu com as seguintes operações:
 | 3 | Multiplicação | Multiplica duas matrizes quando o número de colunas da primeira é igual ao número de linhas da segunda. |
 | 4 | Transposta | Troca as linhas pelas colunas de uma matriz. |
 | 5 | Inversa | Calcula a matriz inversa quando ela é quadrada e possui determinante diferente de zero. |
+| 6 | Sistema linear | Resolve um sistema linear e o classifica em SPD, SPI ou SI. |
 | 0 | Sair | Encerra o programa. |
 
 ## Requisitos
@@ -36,27 +37,20 @@ No Windows, também pode ser necessário usar:
 py calc.py
 ```
 
-Ao iniciar, informe as linhas e as colunas das matrizes A e B. Os valores devem ser separados por vírgulas. Por exemplo:
-
-```text
-Digite um número para representar as linhas da matriz A: 1,2
-Digite um número para representar as colunas da matriz A: 3,4
-```
-
-Depois, escolha no menu o número correspondente à operação desejada.
+Escolha no menu o número da operação. Em seguida, o programa pede a ordem da(s) matriz(es) e cada elemento, um por vez. Os números podem ser inteiros, decimais ou frações (`2`, `1.5`, `1/3`). Os cálculos usam frações exatas, então não há erro de arredondamento.
 
 ## Regras das operações
 
 ### Soma
 
-As duas matrizes precisam ter a mesma quantidade de linhas e colunas:
+As duas matrizes precisam ter a mesma quantidade de linhas e colunas (o programa pede a ordem só de A e usa a mesma em B):
 
 ```text
 A = [1 2]       B = [5 6]
-	[3 4]           [7 8]
+    [3 4]           [7 8]
 
 A + B = [6  8]
-		[10 12]
+        [10 12]
 ```
 
 ### Multiplicação escalar
@@ -65,12 +59,12 @@ Cada elemento da matriz é multiplicado pelo escalar informado:
 
 ```text
 2 * [1 3] = [2 6]
-	[2 4]   [4 8]
+    [2 4]   [4 8]
 ```
 
 ### Multiplicação de matrizes
 
-Se `A` tem ordem `m x n`, `B` precisa ter ordem `n x p`. O resultado terá ordem `m x p`.
+Se `A` tem ordem `m x n`, `B` precisa ter ordem `n x p`. O resultado terá ordem `m x p`. O programa já define o número de linhas de `B` e pergunta apenas as colunas.
 
 ### Transposta
 
@@ -84,11 +78,19 @@ A inversa só existe para matrizes quadradas cujo determinante seja diferente de
 A * A⁻¹ = I
 ```
 
-em que `I` é a matriz identidade.
+em que `I` é a matriz identidade. O cálculo é feito escalonando a matriz `[A | I]` (método de Gauss-Jordan). Se não for possível obter a identidade do lado esquerdo, a matriz não tem inversa e o programa avisa.
 
-## Status do projeto
+### Sistema linear
 
-O menu e as validações iniciais estão estruturados. A implementação dos cálculos e da leitura completa dos elementos das matrizes ainda está em desenvolvimento.
+Informe o número de equações, o número de incógnitas e, para cada equação, os coeficientes e o termo independente. O programa escalona a matriz aumentada `[A | b]` (Gauss-Jordan) e compara o posto de `A` com o posto de `[A | b]`:
+
+| Classificação | Condição | Resultado mostrado |
+| --- | --- | --- |
+| SPD (possível e determinado) | posto(A) = posto([A\|b]) = número de incógnitas | Solução única. |
+| SPI (possível e indeterminado) | posto(A) = posto([A\|b]) < número de incógnitas | Solução geral, com as variáveis livres. |
+| SI (impossível) | posto(A) < posto([A\|b]) | Não há solução. |
+
+Exemplo (SPI): `x + y = 2` e `2x + 2y = 4` resultam em `x2 = livre` e `x1 = 2 - 1*x2`.
 
 ## Tecnologias
 
